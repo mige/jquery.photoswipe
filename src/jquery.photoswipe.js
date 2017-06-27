@@ -42,7 +42,7 @@ function PhotoSwipeMounter($) {
 
     function getWH(wh, $img) {
         var d        = $.Deferred(),
-            wh_value = $img.data('original-src-${wh}');
+            wh_value = $img.data('original-src-'+wh);
 
         if (wh_value) {
             d.resolve(wh_value);
