@@ -42,7 +42,7 @@ function PhotoSwipeMounter($) {
 
     function getWH(wh, $img) {
         var d            = $.Deferred(),
-            wh_value     = $img.data(`original-src-${wh}`),
+            wh_value     = $img.data('original-src-'+wh),
             original_src = decodeURI($img.data('original-src') || $img.attr('src')),
             matches      = original_src.match(/(\d+)[*×x](\d+)/);
 
@@ -51,7 +51,7 @@ function PhotoSwipeMounter($) {
         } else if (matches !== null) {
             d.resolve(matches[(wh === 'width' ? 1 : 2)]);
         } else {
-            $(`<img>`).on('load', function () {
+            $('<img>').on('load', function () {
                 d.resolve(this[wh]);
             }).attr('src', $img.attr('src'));
         }
@@ -193,7 +193,7 @@ function PhotoSwipeMounter($) {
         // Parse URL and open gallery if it contains #&pid=3&gid=1
         var hashData = photoswipeParseHash();
         if (hashData.pid && hashData.gid) {
-            let $gallery            = $galleries[hashData.gid - 1],
+            var $gallery            = $galleries[hashData.gid - 1],
                 pid                 = hashData.pid - 1,
                 $imgs               = getImgs($gallery),
                 imgInfoArrayPromise = getImgInfoArray($imgs);
@@ -225,7 +225,11 @@ function PhotoSwipeMounter($) {
         });
     }
 
-    $.fn.photoSwipe = function (slideSelector = 'img', options = {}, events = {}) {
+    $.fn.photoSwipe = function (slideSelector, options, events) {
+        slideSelector = typeof slideSelector !== 'undefined' ? slideSelector : 'img';
+        options = typeof options !== 'undefined' ? options : {};
+        events = typeof events !== 'undefined' ? events : {};
+
         var defaultOptions = {
                 bgOpacity: 0.973,
                 showHideOpacity: true
